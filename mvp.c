@@ -1,135 +1,104 @@
 #include <stdio.h>
-#include "/home/nath/42projects/libft/libft.h"
+#include "ft_printf.h"
 
-typedef struct	s_arg
-{
-	char	*flags; //"-+0 #"
-	char	type; //"cspdiuxX%"
-	char	*width; //number or *
-	char	*precision; //number or *
-}				t_arg;
-
-char *ft_str_append(char *s, char c)
-{
-	unsigned int	len;
-	char	*r;
-	int		i;
-
-	len = ft_strlen(s);
-	i = 0;
-	//printf("Entered str_append with *s = %s\n", *s);
-	if (!s | !c)
-		return (0);
-	if (!(r = (char *)malloc(sizeof(char) * (len + 2))))
-		return (0);
-	while (s[i])
-	{
-		r[i] = s[i];
-		i++;
-	}
-	r[i++] = c;
-	r[i] = '\0';
-	s = NULL;
-	return (r);
-}
-
-int	already_in_str(char c, char *s)
-{
-	while(*s)
-		if (c == *s++)
-			return (1);
-	return (0);
-}
-
-int	is_flag(char c)
-{
-	//printf("Entered is_flag\n");
-	static char	*flags = "-+0 #";
-	int		i;
-
-	i = 0;
-	while (flags[i])
-	{
-		if (c == flags[i])
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-int	is_type(char c)
-{
-	//printf("Entered is_type\n");
-	static char	*types = "cspdiuxX%";
-	while (*types)
-	{
-		if (c == *types++)
-			return (1);
-	}
-	return (0);
-}
-
-int	ft_isdigit(int c)
-{
-	if (c >= 48 && c <= 57)
-		return (1);
-	else
-		return (0);
-}
-
-void ft_initiate_arg(t_arg *arg)
-{
-	arg->flags = "";
-	arg->type = 0;
-	arg->width = "";
-	arg->precision = "";
-}
-
-void parse_precision(char *s, int *i, t_arg **arg)
+void parse_precision(char *s, int *i, t_arg *arg)
 {
 	if (s[*i] == '.')
-		while (ft_isdigit(s[++*i]) || s[*i] == '*')
-			(*arg)->precision = ft_str_append((*arg)->precision, s[*i]);
+		while (ft_isdigit(s[++(*i)]) || s[*i] == '*')
+			arg->precision = ft_str_append(arg->precision, s[*i]);
 }
 
-void parser(char *s, t_arg *arg)
+void core_parsing(char *s, int *i, t_arg *arg, t_config *config)
+{
+			while (char_in_str((s[++(*i)]), config->flags) == 1)
+				if (!char_in_str(s[*i], arg->flags))
+					arg->flags = ft_str_append(arg->flags, s[*i]);
+			parse_precision(s, i, arg);
+			while (ft_isdigit(s[*i]) || s[*i] == '*')
+				arg->width = ft_str_append(arg->width, s[(*i)++]);
+			parse_precision(s, i, arg);
+			if (char_in_str((s[*i]), config->types) == 1)
+					arg->type = s[*i];
+}
+
+char *convert_s(va_list ap, t_arg *arg)
+{
+	int	len_ap;
+	int l_pad;
+	int r_pad;
+	int len_displayed;
+	char *ret;
+	char *s;
+	char *pad;
+	char *tmp;
+
+	r_pad = (char_in_str('-', arg->flags) == 1) ? ft_atoi(arg->width) : 0;
+	l_pad = (char_in_str('-', arg->flags) == 0) ? ft_atoi(arg->width) : 0;
+	len_displayed = ft_atoi(arg->precision);
+	s = va_arg(ap, char *);
+	len_ap = ft_strlen(s);
+	if (len_displayed < len_ap)
+		len_ap = len_displayed;
+	l_pad = (l_pad > len_ap) ? l_pad - len_ap : 0;
+	r_pad = (r_pad > len_ap) ? r_pad - len_ap : 0;
+	pad = strset(' ', l_pad + r_pad);
+	//printf("padding size = %d -- pad = %s\n", l_pad + r_pad, pad);
+	tmp = (len_displayed < len_ap) ft_substr(s , 0, len_ap);
+	ret = (r_pad == 0) ? ft_strjoin(pad, tmp) : ft_strjoin(tmp, pad);
+	free(pad);
+	free(tmp);
+	return (ret);
+}
+
+
+char *preparing_ret(va_list ap, t_arg *arg, t_config *config)
+{
+	return (convert_s(ap, arg));
+}
+
+void read_fmt(char *s, t_arg *arg, t_config *config, va_list ap)
 {
 	int	i;
+	char *print;
 
 	i = 0;
 	while (s[i])
 	{
 		if (s[i] == '%')
 		{
-			ft_initiate_arg(arg);
-			i++;
-			while (is_flag((s[i])) == 1)
-			{
-				if (!already_in_str(s[i], arg->flags))
-					arg->flags = ft_str_append(arg->flags, s[i]);
-				i++;
-			}
-			parse_precision(s, &i, &arg);
-			while (ft_isdigit(s[i]) || s[i] == '*')
-				arg->width = ft_str_append(arg->width, s[i++]);
-			parse_precision(s, &i, &arg);
-			if (is_type((s[i])) == 1)
-					arg->type = s[i];
+			initiate_arg(arg);
+			core_parsing(s, &i, arg, config);
+			print = preparing_ret(ap, arg, config);
+			ft_putstr_fd(print, 1);
 		}
+		else
+			ft_putchar_fd(s[i], 1);
 		i++;
 	}
 }
 
+int ft_printf(const char *fmt, ...)
+{
+	va_list ap;
+	t_arg *arg1;
+	t_config *config;
+
+	arg1 = malloc(sizeof(t_arg));
+	config = malloc(sizeof(t_config));
+	va_start(ap, fmt);
+	initiate_config(config);
+	read_fmt((char *)fmt, arg1, config, ap);
+	va_end(ap);
+	//printf("flags = '%s' -- width = '%s' -- precision = '%s' -- type = '%c'\n", arg1->flags, arg1->width, arg1->precision, arg1->type);
+	//printf("config - %s\n", config->types);
+	free(arg1);
+	free(config);
+	return (0);
+}
+
 int main()
 {
-	t_arg arg1;
-
-	char *str_to_print = "simple %-+000000000 #20c test ";
-
-	//printf("flags %s -- types %s\n", flags, types);
-	parser(str_to_print, &arg1);
-	printf("flags = '%s' -- width = '%s' -- precision = '%s'					-- type = '%c'\n", arg1.flags, arg1.width, arg1.precision, arg1.type);
-	free(arg1.flags);
-	//printf("result append str = %s",ft_str_append("Hell",'o'));
+	ft_printf("simple %-.2s test \n", "LOLZ");
+	return (0);
 }
 

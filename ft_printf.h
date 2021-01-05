@@ -6,7 +6,7 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 15:50:08 by calle             #+#    #+#             */
-/*   Updated: 2020/12/16 17:59:12 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/05 18:15:58 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,27 @@
 #define FT_PRINTF_H
 
 # include <stdarg.h>
+# include <stdlib.h>
+# include "/home/nath/42projects/ft_printf/libft/libft.h"
 
 typedef struct	s_arg
 {
 	char	*flags; //"-+0 #"
-	char	*type; //"cspdiuxX%"
-	int		width; //number or *
-	int		precision; //number or *
+	char	type; //"cspdiuxX%"
+	char	*width; //number or *
+	char	*precision; //number or *
 }				t_arg;
 
-typedef struct	s_all_args
+typedef struct	s_config
 {
-	t_arg	p;
-}				t_all_args;
+	char *types;
+	char *flags;
+}				t_config;
 
-int		ft_printf(const char *s,...);
-int		ft_init_parsing(const char *s, struct);
-
+int		ft_printf(const char *fmt,...);
+void	initiate_arg(t_arg *arg);
+void	initiate_config(t_config *config);
+char	*ft_str_append(char *s, char c);
+int		char_in_str(char c, char *s);
+char	*strset(char c, unsigned int n);
+#endif
