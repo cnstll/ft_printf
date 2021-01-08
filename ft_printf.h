@@ -6,7 +6,7 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 15:50:08 by calle             #+#    #+#             */
-/*   Updated: 2021/01/05 18:15:58 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/08 16:53:01 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,11 @@ typedef struct	s_arg
 	char	type; //"cspdiuxX%"
 	char	*width; //number or *
 	char	*precision; //number or *
+	int		l_pad;
+	int		r_pad;
+	int		len_displayed;
+	int		len_arg;
+	char	*chain;
 }				t_arg;
 
 typedef struct	s_config
