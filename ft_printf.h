@@ -6,7 +6,7 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 15:50:08 by calle             #+#    #+#             */
-/*   Updated: 2021/01/08 16:53:01 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/10 17:00:32 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ typedef struct	s_arg
 	int		len_displayed;
 	int		len_arg;
 	char	*chain;
+	int		sign;
+	int     zero_displayed;
 }				t_arg;
 
 typedef struct	s_config
