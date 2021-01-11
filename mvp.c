@@ -66,7 +66,25 @@ void arg_display_char(t_arg *arg)
 	//printf("> arg->len_arg : %d\n> arg->len_displayed : %d\n", arg->len_arg, arg->len_displayed);
 }
 
-void handle_additional_modifiers(t_arg *arg)
+void handle_d_i_modifiers(t_arg *arg)
+{
+	if (!(*arg->precision))
+	{
+		if (char_in_str('-', arg->flags) == 0 && char_in_str('0', arg->flags) == 1)
+		{
+			arg->zero_displayed = arg->l_pad;
+			arg->l_pad = 0;
+		}
+		if (char_in_str('+', arg->flags) == 0 && char_in_str(' ', arg->flags) == 1)
+		{
+			arg->zero_displayed = arg->zero_displayed - 1;
+			arg->l_pad = arg->l_pad + 1 + arg->sign;
+			arg->r_pad = arg->r_pad - 1 - arg->sign;
+		}
+	}
+}
+
+void handle_x_modifiers(t_arg *arg)
 {
 	if (!(*arg->precision))
 	{
@@ -150,7 +168,7 @@ char *convert_c(t_arg *arg, va_list ap)
 	return (ret);
 }
 
-char *make_d_i(t_arg *arg)
+char *make_d_i_u(t_arg *arg)
 {
 	char	*r;
 	int		i;
@@ -192,17 +210,18 @@ char *convert_d_i(t_arg *arg, va_list ap)
 	nb = 0;
 	if (n < 0)
 	{
-		nb = -(unsigned int)(n + 1) + 1; 
+		nb = -(n + 1);
+		nb = nb + 1;
 		arg->sign = -1;
 	}
-	else 	
+	else
 		nb = (unsigned int)n;
 	if (char_in_str('+', arg->flags) == 1 && arg->sign != -1)
 		arg->sign = 1;
 	arg->chain = ft_itoa(nb);
 	arg_display_nb(arg);
-	handle_additional_modifiers(arg);
-	ret = make_d_i(arg);
+	handle_d_i_modifiers(arg);
+	ret = make_d_i_u(arg);
 	free(arg->chain);
 	free_all(arg);
 	return (ret);
@@ -214,18 +233,40 @@ char *convert_u(t_arg *arg, va_list ap)
 	unsigned int	nb;
 
 	nb = va_arg(ap, unsigned int);
-	if (char_in_str('+', arg->flags) == 1 && arg->sign != -1)
-		arg->sign = 1;
 	arg->chain = ft_itoa(nb);
 	arg_display_nb(arg);
-	handle_additional_modifiers(arg);
-	ret = make_d_i(arg);
+	ret = make_d_i_u(arg);
 	free(arg->chain);
 	free_all(arg);
 	return (ret);
 }
 
-void check_arg(va_list ap, t_arg *arg, t_config *config)
+char *convert_x(t_arg *arg, va_list ap)
+{
+	char			*ret;
+	unsigned int	nb;
+	int				n;
+
+	n = va_arg(ap, int);
+	nb = 0;
+	if (n < 0)
+	{
+		nb = -(n + 1);
+		nb = nb + 1;
+		arg->sign = -1;
+	}
+	else
+		nb = (unsigned int)n;
+	arg->chain = ft_itoa(nb);
+	arg_display_nb(arg);
+	handle_x_modifiers(arg);
+	ret = make_d_i_u(arg);
+	free(arg->chain);
+	free_all(arg);
+	return (ret);
+}
+
+void check_arg(va_list ap, t_arg *arg)
 {
 	char *tmp;
 
@@ -245,15 +286,18 @@ void check_arg(va_list ap, t_arg *arg, t_config *config)
 	}
 }
 
-char *preparing_ret(va_list ap, t_arg *arg, t_config *config)
+char *preparing_ret(va_list ap, t_arg *arg)
 {
-		check_arg(ap, arg, config);
+		check_arg(ap, arg);
 		if (arg->type == 'c')
 			return (convert_c(arg, ap));
 		else if (arg->type == 's')
 			return (convert_s(arg, ap));
 		else if (arg->type == 'd' || arg->type == 'i')
 			return (convert_d_i(arg, ap));
+		else if (arg->type == 'u')
+			return (convert_u(arg, ap));
+		//else if (arg->type == 'x' || arg->type == 'X')
 		else
 			return (NULL);
 }
@@ -269,7 +313,7 @@ void read_fmt(char *fmt, t_config *config, va_list ap)
 	i = 0;
 	while (fmt[i])
 	{
-		if (fmt[i] == '%')
+		if (fmt[i] == '%')  //&& fmt[i + 1] != '%'
 		{
 			if (!(arg = (t_arg *)malloc(sizeof(t_arg))))
 				return ;
@@ -277,7 +321,7 @@ void read_fmt(char *fmt, t_config *config, va_list ap)
 			core_parsing(fmt, &i, arg, config);
 			//printf("\n> arg->flags : %s\n> arg->width : %s\n", arg->flags, arg->width);
 			//printf("> arg->type : %c\n", arg->type);
-			print = preparing_ret(ap, arg, config);
+			print = preparing_ret(ap, arg);
 			ft_putstr_fd(print, 1);
 			free(print);
 			free(arg);
@@ -308,15 +352,15 @@ int main()
 	int i;
 	int j;
 
-	i = 0;
+	//i = 0;
 	j = 0;
 	//ft_printf("ft_printf result : ");
 	//ft_printf("simple %-10.*s \n", 1 * 2, "LOLZ");
 	//ft_printf("simple %-10.*s test %-*c\n", 1 * 2, "LOLZ", '\n', 'L');
 	//ft_printf("\nPrintf result    : ");
 	//printf("simple %-10.*s test %-*c\n", 1 * 2, "LOLZ", '\n', 'L');
-	ft_printf("%d -- ", ++i);
-	ft_printf("simple '%10.5d' test\n", -10);
+	/*ft_printf("%d -- ", ++i);
+	ft_printf("simple '%10.5d' test \n", -10);
 	ft_printf("%d -- ", ++i);
 	ft_printf("simple '%10.12d' test\n", -10);
 	ft_printf("%d -- ", ++i);
@@ -330,8 +374,6 @@ int main()
 	ft_printf("%d -- ", ++i);
 	ft_printf("simple '%010d' test\n", 10);
 	ft_printf("%d -- ", ++i);
-	ft_printf("simple '% 0-4d' test\n", 10);
-	ft_printf("%d -- ", ++i);
 	ft_printf("simple '%10.2d' test\n", 10);
 	ft_printf("%d -- ", ++i);
 	ft_printf("simple '%+10.2d' test\n", 10);
@@ -344,16 +386,30 @@ int main()
 	ft_printf("%d -- ", ++i);
 	ft_printf("simple '%+-10d' test\n", 10);
 	ft_printf("%d -- ", ++i);
-	ft_printf("simple '% -10d' test\n", 10);	
+	ft_printf("simple '% -10d' test\n", 10);
 	ft_printf("%d -- ", ++i);
-	ft_printf("simple '% -10d' test\n", -10);		
-	//ft_printf("%d -- ", ++i);	
-	//ft_printf("simple '%d' test\n", INT_MIN);	
+	ft_printf("simple '% -10d' test\n", -10);
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '%d' test\n", INT_MIN);*/
+	/*ft_printf("%d -- ", ++i);
+	ft_printf("simple '%10.5u' test\n", 9);
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '%10.12u' test\n", 9);
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '%010u' test\n", 9);
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '%10.2u' test\n", 9);
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '%-10u' test\n", 9);
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '%u' test\n", 9);
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '%u' test\n", UINT_MAX);*/
 
 
-	printf("<------------------------------------>\n");	
-	
-	
+	printf("<------------------------------------>\n");
+
+/*
 	printf("%d -- ", ++j);
 	printf("simple '%10.5d' test\n", -10);
 	printf("%d -- ", ++j);
@@ -369,25 +425,49 @@ int main()
 	printf("%d -- ", ++j);
 	printf("simple '%010d' test\n", 10);
 	printf("%d -- ", ++j);
-	printf("simple '% 0-4d' test\n", 10);
-	printf("%d -- ", ++j);
-	printf("simple '%10.2d' test\n", 10);	
+	printf("simple '%10.2d' test\n", 10);
 	printf("%d -- ", ++j);
 	printf("simple '%+10.2d' test\n", 10);
 	printf("%d -- ", ++j);
 	printf("simple '%+10.5d' test\n", 10);
 	printf("%d -- ", ++j);
-	printf("simple '%+10.12d' test\n", 10);	
+	printf("simple '%+10.12d' test\n", 10);
 	printf("%d -- ", ++j);
-	printf("simple '%+10d' test\n", 10);	
+	printf("simple '%+10d' test\n", 10);
 	printf("%d -- ", ++j);
 	printf("simple '%+-10d' test\n", 10);
 	printf("%d -- ", ++j);
 	printf("simple '% -10d' test\n", 10);
 	printf("%d -- ", ++j);
 	printf("simple '% -10d' test\n", -10);
-	//printf("%d -- ", ++j);
-	//printf("simple '%d' test\n", INT_MIN);
-	return (0);
+	printf("%d -- ", ++j);
+	printf("simple '%d' test\n", INT_MIN);*/
+	/*printf("%d -- ", ++j);
+	printf("simple '%10.5u' test\n", 9);
+	printf("%d -- ", ++j);
+	printf("simple '%10.12u' test\n", 9);
+	printf("%d -- ", ++j);
+	printf("simple '%010u' test\n", 9);
+	printf("%d -- ", ++j);
+	printf("simple '%10.2u' test\n", 9);
+	printf("%d -- ", ++j);
+	printf("simple '%-10u' test\n", 9);
+	printf("%d -- ", ++j);
+	printf("simple '%u' test\n", 9);
+	printf("%d -- ", ++j);
+	printf("simple '%u' test\n", UINT_MAX);*/
+	printf("%d -- ", ++j);
+	printf("simple '%x' test\n", UINT_MAX);
+	printf("%d -- ", ++j);
+	printf("simple '%x' test\n", INT_MIN);
+	printf("%d -- ", ++j);
+	printf("simple '%10.5x' test\n", 11);
+	printf("%d -- ", ++j);
+	printf("simple '%-10x' test\n", 11);
+	printf("%d -- ", ++j);
+	printf("simple '%#X' test\n", 11);
+	printf("%d -- ", ++j);
+	printf("simple '%010x' test\n", 11);
+return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 15:50:08 by calle             #+#    #+#             */
-/*   Updated: 2021/01/10 17:00:32 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/11 16:16:09 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <stdarg.h>
 # include <stdlib.h>
 # include <limits.h>
-# include "/Users/calle/calle/ft_printf/libft/libft.h"
+# include "../ft_printf/libft/libft.h"
 typedef struct	s_arg
 {
 	char	*flags; //"-+0 #"
