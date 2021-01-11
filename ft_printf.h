@@ -15,8 +15,8 @@
 
 # include <stdarg.h>
 # include <stdlib.h>
-# include "/home/nath/42projects/ft_printf/libft/libft.h"
-
+# include <limits.h>
+# include "/Users/calle/calle/ft_printf/libft/libft.h"
 typedef struct	s_arg
 {
 	char	*flags; //"-+0 #"

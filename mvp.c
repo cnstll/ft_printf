@@ -78,8 +78,8 @@ void handle_additional_modifiers(t_arg *arg)
 		if (char_in_str('+', arg->flags) == 0 && char_in_str(' ', arg->flags) == 1)
 		{
 			arg->zero_displayed = arg->zero_displayed - 1;
-			arg->l_pad = arg->l_pad + 1;
-			arg->r_pad = arg->r_pad - 1;
+			arg->l_pad = arg->l_pad + 1 + arg->sign;
+			arg->r_pad = arg->r_pad - 1 - arg->sign;
 		}
 	}
 }
@@ -184,15 +184,36 @@ char *make_d_i(t_arg *arg)
 
 char *convert_d_i(t_arg *arg, va_list ap)
 {
-	char	*ret;
-	int		nb;
+	char			*ret;
+	unsigned int	nb;
+	int				n;
 
-	nb = va_arg(ap, int);
-	if (nb < 0)
+	n = va_arg(ap, int);
+	nb = 0;
+	if (n < 0)
 	{
-		nb = -nb;
+		nb = -(unsigned int)(n + 1) + 1; 
 		arg->sign = -1;
 	}
+	else 	
+		nb = (unsigned int)n;
+	if (char_in_str('+', arg->flags) == 1 && arg->sign != -1)
+		arg->sign = 1;
+	arg->chain = ft_itoa(nb);
+	arg_display_nb(arg);
+	handle_additional_modifiers(arg);
+	ret = make_d_i(arg);
+	free(arg->chain);
+	free_all(arg);
+	return (ret);
+}
+
+char *convert_u(t_arg *arg, va_list ap)
+{
+	char			*ret;
+	unsigned int	nb;
+
+	nb = va_arg(ap, unsigned int);
 	if (char_in_str('+', arg->flags) == 1 && arg->sign != -1)
 		arg->sign = 1;
 	arg->chain = ft_itoa(nb);
@@ -284,14 +305,89 @@ int ft_printf(const char *fmt, ...)
 
 int main()
 {
+	int i;
+	int j;
+
+	i = 0;
+	j = 0;
 	//ft_printf("ft_printf result : ");
 	//ft_printf("simple %-10.*s \n", 1 * 2, "LOLZ");
 	//ft_printf("simple %-10.*s test %-*c\n", 1 * 2, "LOLZ", '\n', 'L');
 	//ft_printf("\nPrintf result    : ");
 	//printf("simple %-10.*s test %-*c\n", 1 * 2, "LOLZ", '\n', 'L');
-	ft_printf("simple %10.5d\n", -10);
-	ft_printf("simple %010d\n", -10);
-	ft_printf("simple % 0-4d\n", 10);
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '%10.5d' test\n", -10);
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '%10.12d' test\n", -10);
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '%010d' test\n", -10);
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '% 0-4d' test\n", -10);
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '%10.5d' test\n", 10);
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '%10.12d' test\n", 10);
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '%010d' test\n", 10);
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '% 0-4d' test\n", 10);
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '%10.2d' test\n", 10);
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '%+10.2d' test\n", 10);
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '%+10.5d' test\n", 10);
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '%+10.12d' test\n", 10);
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '%+10d' test\n", 10);
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '%+-10d' test\n", 10);
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '% -10d' test\n", 10);	
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '% -10d' test\n", -10);		
+	//ft_printf("%d -- ", ++i);	
+	//ft_printf("simple '%d' test\n", INT_MIN);	
+
+
+	printf("<------------------------------------>\n");	
+	
+	
+	printf("%d -- ", ++j);
+	printf("simple '%10.5d' test\n", -10);
+	printf("%d -- ", ++j);
+	printf("simple '%10.12d' test\n", -10);
+	printf("%d -- ", ++j);
+	printf("simple '%010d' test\n", -10);
+	printf("%d -- ", ++j);
+	printf("simple '% 0-4d' test\n", -10);
+	printf("%d -- ", ++j);
+	printf("simple '%10.5d' test\n", 10);
+	printf("%d -- ", ++j);
+	printf("simple '%10.12d' test\n", 10);
+	printf("%d -- ", ++j);
+	printf("simple '%010d' test\n", 10);
+	printf("%d -- ", ++j);
+	printf("simple '% 0-4d' test\n", 10);
+	printf("%d -- ", ++j);
+	printf("simple '%10.2d' test\n", 10);	
+	printf("%d -- ", ++j);
+	printf("simple '%+10.2d' test\n", 10);
+	printf("%d -- ", ++j);
+	printf("simple '%+10.5d' test\n", 10);
+	printf("%d -- ", ++j);
+	printf("simple '%+10.12d' test\n", 10);	
+	printf("%d -- ", ++j);
+	printf("simple '%+10d' test\n", 10);	
+	printf("%d -- ", ++j);
+	printf("simple '%+-10d' test\n", 10);
+	printf("%d -- ", ++j);
+	printf("simple '% -10d' test\n", 10);
+	printf("%d -- ", ++j);
+	printf("simple '% -10d' test\n", -10);
+	//printf("%d -- ", ++j);
+	//printf("simple '%d' test\n", INT_MIN);
 	return (0);
 }
 
