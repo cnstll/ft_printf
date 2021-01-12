@@ -6,14 +6,13 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/11 17:40:17 by calle             #+#    #+#             */
-/*   Updated: 2021/01/11 19:05:07 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/12 16:32:38 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-#include <stdio.h>
 
-int					ft_base_valid(char *bse)
+int		ft_base_valid(char *bse)
 {
 	int				i;
 	int				j;
@@ -27,16 +26,14 @@ int					ft_base_valid(char *bse)
 			return (0);
 		j = i + 1;
 		while (bse[j])
-		{
 			if (bse[i] == bse[j++])
 				return (0);
-		}
 		i++;
 	}
 	return (i);
 }
 
-char			*ft_strrev(char *s)
+char	*ft_strrev(char *s)
 {
 	size_t			len;
 	char			tmp;
@@ -55,23 +52,17 @@ char			*ft_strrev(char *s)
 	return (s);
 }
 
-char			*ft_itoa_base(long int nbr, char *base)
+char	*ft_itoa_base(unsigned int nbr, char *base)
 {
-	int						bse;
-	char					*ret;
-	unsigned long int		t_nbr;
+	int				bse;
+	char			*ret;
+	unsigned int	t_nbr;
 
 	bse = ft_base_valid(base);
 	ret = "";
 	if (bse == 0)
 		return (NULL);
-	if (nbr < 0)
-	{
-		t_nbr = -nbr;
-		ret = ft_str_append(ret, '-');
-	}
-	else
-		t_nbr = nbr;
+	t_nbr = nbr;
 	while (t_nbr != 0)
 	{
 		ret = ft_str_append(ret, base[(t_nbr % bse)]);
@@ -82,14 +73,3 @@ char			*ft_itoa_base(long int nbr, char *base)
 	return (ft_strrev(ret));
 }
 
-int main()
-{
-	char *r;
-
-	r = ft_itoa_base(-11,"0123456789abcdef");
-	printf("ret = %s\n", r);
-	printf("ret = %x\n", -1);
-	printf);
-	printf("ret = %x\n", UINT_MAX);
-	free(r);
-}

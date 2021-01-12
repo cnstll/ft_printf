@@ -6,7 +6,7 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 15:50:08 by calle             #+#    #+#             */
-/*   Updated: 2021/01/11 16:16:09 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/12 19:11:03 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,10 @@ typedef struct	s_arg
 	int		len_arg;
 	char	*chain;
 	int		sign;
-	int     zero_displayed;
+	int     nb_zeros;
+	char	*x_comp;
+	int		len_xcomp;
+	void	*ptr;
 }				t_arg;
 
 typedef struct	s_config
@@ -44,4 +47,5 @@ void	initiate_config(t_config *config);
 char	*ft_str_append(char *s, char c);
 int		char_in_str(char c, char *s);
 char	*strset(char c, unsigned int n);
+char	*ft_itoa_base(unsigned int nbr, char *base);
 #endif

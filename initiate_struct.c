@@ -6,7 +6,7 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 16:39:12 by calle             #+#    #+#             */
-/*   Updated: 2021/01/10 15:39:19 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/12 19:11:32 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,10 @@ void initiate_arg(t_arg *arg)
 	arg->len_arg = 0;
 	arg->chain = "";
 	arg->sign = 0;
-	arg->zero_displayed = 0;
+	arg->nb_zeros = 0;
+	arg->x_comp = "";
+	arg->len_xcomp = 0;
+	arg->ptr = NULL;
 }
 
 void initiate_config(t_config *config)
