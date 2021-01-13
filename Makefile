@@ -6,34 +6,39 @@
 #    By: calle <calle@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/01/04 16:50:27 by calle             #+#    #+#              #
-#    Updated: 2021/01/04 17:15:09 by calle            ###   ########.fr        #
+#    Updated: 2021/01/13 16:42:14 by calle            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libftprintf.a
 
-SRCS = $(wildcard *.c)
-
+SRCS = initiate_struct.c\
+		itoa_base.c\
+		mvp.c\
+		utils.c
 OBJS = $(SRCS:.c=.o)
 
 HEADERS = ft_printf.h
 
-CC = clang-9
+CC = gcc
 
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -c -Wall -Werror -Wextra
+
+LIB = -L./libft/ -lft
 
 all : $(NAME)
 
 $(NAME) : $(OBJS)
-		make -C libft/
-		ar rcs $@ $^ libft/libft.a
-
+		$(MAKE) -C ./libft
+		cp libft/libft.a $(NAME)
+		$(CC) $(CFLAGS) $(HEADERS) $(SRCS)
+		ar rcs $@ $^
 clean :
-		clean -C libft/
+		$(MAKE) clean -C ./libft
 		rm -f $(OBJS)
 
 fclean : clean
-		 fclean -C libft/
+		 $(MAKE) fclean -C ./libft
 		 rm -f $(NAME)
 
 re : fclean all

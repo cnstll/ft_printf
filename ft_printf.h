@@ -6,7 +6,7 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 15:50:08 by calle             #+#    #+#             */
-/*   Updated: 2021/01/12 19:11:03 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/13 16:22:57 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <stdarg.h>
 # include <stdlib.h>
 # include <limits.h>
-# include "../ft_printf/libft/libft.h"
+# include "../libft/libft.h"
 typedef struct	s_arg
 {
 	char	*flags; //"-+0 #"
@@ -45,7 +45,7 @@ int		ft_printf(const char *fmt,...);
 void	initiate_arg(t_arg *arg);
 void	initiate_config(t_config *config);
 char	*ft_str_append(char *s, char c);
-int		char_in_str(char c, char *s);
+int		c_in_s(char c, char *s);
 char	*strset(char c, unsigned int n);
-char	*ft_itoa_base(unsigned int nbr, char *base);
+char	*ft_itoa_base(long unsigned int nbr, char *base);
 #endif

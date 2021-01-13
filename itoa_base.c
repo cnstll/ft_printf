@@ -6,7 +6,7 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/11 17:40:17 by calle             #+#    #+#             */
-/*   Updated: 2021/01/12 16:32:38 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/13 15:01:56 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,11 @@ char	*ft_strrev(char *s)
 	return (s);
 }
 
-char	*ft_itoa_base(unsigned int nbr, char *base)
+char	*ft_itoa_base(long unsigned int nbr, char *base)
 {
-	int				bse;
-	char			*ret;
-	unsigned int	t_nbr;
+	int					bse;
+	char				*ret;
+	long unsigned int	t_nbr;
 
 	bse = ft_base_valid(base);
 	ret = "";

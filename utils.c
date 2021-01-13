@@ -6,13 +6,13 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 15:57:10 by calle             #+#    #+#             */
-/*   Updated: 2021/01/08 16:52:55 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/13 15:55:05 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int		char_in_str(char c, char *s)
+int		c_in_s(char c, char *s)
 {
 	while(*s)
 		if (c == *s++)

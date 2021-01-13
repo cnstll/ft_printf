@@ -27,8 +27,8 @@ void parse_precision(char *s, int *i, t_arg *arg)
 
 void core_parsing(char *s, int *i, t_arg *arg, t_config *config)
 {
-			while (char_in_str((s[++(*i)]), config->flags) == 1)
-				if (!char_in_str(s[*i], arg->flags))
+			while (c_in_s((s[++(*i)]), config->flags) == 1)
+				if (!c_in_s(s[*i], arg->flags))
 					arg->flags = ft_str_append(arg->flags, s[*i]);
 			parse_precision(s, i, arg);
 			if (s[*i] == '*')
@@ -39,7 +39,7 @@ void core_parsing(char *s, int *i, t_arg *arg, t_config *config)
 					arg->width = ft_str_append(arg->width, s[(*i)++]);
 			}
 			parse_precision(s, i, arg);
-			if (char_in_str((s[*i]), config->types) == 1)
+			if (c_in_s((s[*i]), config->types) == 1)
 					arg->type = s[*i];
 }
 
@@ -49,7 +49,7 @@ void arg_display_char(t_arg *arg)
 	arg->len_displayed = ft_atoi(arg->precision);
 	if (*(arg->precision) && arg->len_displayed < arg->len_arg)
 		arg->len_arg = arg->len_displayed;
-	if (char_in_str('-', arg->flags) == 1)
+	if (c_in_s('-', arg->flags) == 1)
 	{
 		arg->r_pad = ft_atoi(arg->width);
 		if (arg->r_pad > arg->len_arg)
@@ -63,19 +63,18 @@ void arg_display_char(t_arg *arg)
 			arg->l_pad = arg->l_pad - arg->len_arg;
 		arg->r_pad = 0;
 	}
-	//printf("> arg->len_arg : %d\n> arg->len_displayed : %d\n", arg->len_arg, arg->len_displayed);
 }
 
 void handle_d_i_modifiers(t_arg *arg)
 {
 	if (!(*arg->precision))
 	{
-		if (char_in_str('-', arg->flags) == 0 && char_in_str('0', arg->flags) == 1)
+		if (c_in_s('-', arg->flags) == 0 && c_in_s('0', arg->flags) == 1)
 		{
 			arg->nb_zeros = arg->l_pad;
 			arg->l_pad = 0;
 		}
-		if (char_in_str('+', arg->flags) == 0 && char_in_str(' ', arg->flags) == 1)
+		if (c_in_s('+', arg->flags) == 0 && c_in_s(' ', arg->flags) == 1)
 		{
 			arg->nb_zeros = arg->nb_zeros - 1;
 			arg->l_pad = arg->l_pad + 1 + arg->sign;
@@ -88,13 +87,13 @@ void handle_x_X_modifiers(t_arg *arg)
 {
 	if (!(*arg->precision))
 	{
-		if (char_in_str('-', arg->flags) == 0 && char_in_str('0', arg->flags) == 1)
+		if (c_in_s('-', arg->flags) == 0 && c_in_s('0', arg->flags) == 1)
 		{
 			arg->nb_zeros = arg->l_pad;
 			arg->l_pad = 0;
 		}
 	}
-	if (char_in_str('#', arg->flags) == 1)
+	if (c_in_s('#', arg->flags) == 1)
 	{
 		if (!*(arg->precision))
 			arg->nb_zeros = arg->nb_zeros - 2;
@@ -122,7 +121,7 @@ void arg_display_nb(t_arg *arg)
 		arg->nb_zeros = arg->len_displayed - arg->len_arg;
 	if (*(arg->width) && arg->len_displayed <= ft_atoi(arg->width))
 	{
-		if (char_in_str('-', arg->flags) == 1)
+		if (c_in_s('-', arg->flags) == 1)
 		{
 			arg->r_pad = ft_atoi(arg->width);
 			if (arg->r_pad > arg->len_arg)
@@ -228,7 +227,7 @@ char *convert_d_i(t_arg *arg, va_list ap)
 	}
 	else
 		nb = (unsigned int)n;
-	if (char_in_str('+', arg->flags) == 1 && arg->sign != -1)
+	if (c_in_s('+', arg->flags) == 1 && arg->sign != -1)
 		arg->sign = 1;
 	arg->chain = ft_itoa(nb);
 	arg_display_nb(arg);
@@ -253,10 +252,61 @@ char *convert_u(t_arg *arg, va_list ap)
 	return (ret);
 }
 
+void handle_p_modifiers(t_arg *arg)
+{
+	if (c_in_s('-', arg->flags) == 0 && c_in_s('0', arg->flags) == 1)
+	{
+		arg->nb_zeros = arg->l_pad;
+		arg->l_pad = 0;
+	}
+	if (arg->l_pad >= 2)
+		arg->l_pad = arg->l_pad - 2;
+	else
+		arg->l_pad = 0;
+	if (arg->r_pad >= 2)
+		arg->r_pad = arg->r_pad - 2;
+	else
+		arg->r_pad = 0;
+	if (arg->nb_zeros >= 2)
+		arg->nb_zeros = arg->nb_zeros - 2;
+	else
+		arg->nb_zeros = 0;
+}
+
+char *make_p(t_arg *arg)
+{
+	char	*r;
+	int		i;
+	int		t;
+	int		j;
+
+	t = arg->len_arg + arg->r_pad + arg->l_pad + arg->nb_zeros + 2;
+	i = 0;
+	j = 0;
+	if (!(r = (char *)malloc(sizeof(char) * (t + 1))))
+		return (NULL);
+	t = arg->l_pad;
+	while (t-- > 0)
+		r[i++] = ' ';
+	r[i++] = '0';
+	r[i++] = 'x';
+	t = arg->nb_zeros;
+	while (t-- > 0)
+		r[i++] = '0';
+	t = arg->len_arg;
+	while (t-- > 0)
+		r[i++] = (arg->chain)[j++];
+	t = arg->r_pad;
+	while (t-- > 0)
+		r[i++] = ' ';
+	r[i] = '\0';
+	return (r);
+}
+
 void arg_display_p(t_arg *arg)
 {
 	arg->len_arg = ft_strlen(arg->chain);
-	if (char_in_str('-', arg->flags) == 1)
+	if (c_in_s('-', arg->flags) == 1)
 	{
 		arg->r_pad = ft_atoi(arg->width);
 		if (arg->r_pad > arg->len_arg)
@@ -275,17 +325,12 @@ void arg_display_p(t_arg *arg)
 char *convert_p(t_arg *arg, va_list ap)
 {
 	char	*ret;
-	char	*pad;
 
-	arg->chain = (void *)va_arg(ap, void *);
-	printf("%p\n", arg->chain);
+	arg->chain = ft_itoa_base(va_arg(ap, unsigned long), "0123456789abcdef");
 	arg_display_p(arg);
-	pad = strset(' ', arg->l_pad + arg->r_pad);
-	if (arg->r_pad == 0)
-		ret = ft_strjoin(pad, arg->chain);
-	else
-		ret = ft_strjoin(arg->chain, pad);
-	free(pad);
+	handle_p_modifiers(arg);
+	ret = make_p(arg);
+	free(arg->chain);
 	free_all(arg);
 	return (ret);
 }
@@ -353,14 +398,14 @@ void check_arg(va_list ap, t_arg *arg)
 {
 	char *tmp;
 
-	if (char_in_str('*', arg->width) ==  1)
+	if (c_in_s('*', arg->width) ==  1)
 	{
 		free(arg->width);
 		tmp = ft_itoa((va_arg(ap, int)));
 		arg->width = ft_strdup(tmp);
 		free(tmp);
 	}
-	if (char_in_str('*', arg->precision) ==  1)
+	if (c_in_s('*', arg->precision) ==  1)
 	{
 		free(arg->precision);
 		tmp = ft_itoa(va_arg(ap, int));
@@ -401,14 +446,12 @@ void read_fmt(char *fmt, t_config *config, va_list ap)
 	i = 0;
 	while (fmt[i])
 	{
-		if (fmt[i] == '%')  //&& fmt[i + 1] != '%'
+		if (fmt[i] == '%')
 		{
 			if (!(arg = (t_arg *)malloc(sizeof(t_arg))))
 				return ;
 			initiate_arg(arg);
 			core_parsing(fmt, &i, arg, config);
-			//printf("\n> arg->flags : %s\n> arg->width : %s\n", arg->flags, arg->width);
-			//printf("> arg->type : %c\n", arg->type);
 			print = preparing_ret(ap, arg);
 			ft_putstr_fd(print, 1);
 			free(print);
@@ -435,14 +478,14 @@ int ft_printf(const char *fmt, ...)
 	return (0);
 }
 
-int main()
+/*int main()
 {
 	int i;
 	int j;
 	char *s = "hello";
 
 	i = 0;
-	j = 0;
+	j = 0;*/
 	//ft_printf("ft_printf result : ");
 	//ft_printf("simple %-10.*s \n", 1 * 2, "LOLZ");
 	//ft_printf("simple %-10.*s test %-*c\n", 1 * 2, "LOLZ", '\n', 'L');
@@ -518,11 +561,16 @@ int main()
         ft_printf("ceci est une  phrase avec un x : %-#10x\n", INT_MIN);*/
     //ft_printf("ceci est une  phrase avec un x : %-#10% %d%\n", 2);
     //ft_printf("ceci est une  phrase avec un x : %%\n");
+	/*ft_printf("%d -- ", ++i);
+	ft_printf("simple '%020p' test\n", &s);
 	ft_printf("%d -- ", ++i);
-	ft_printf("simple '%p' test\n", &s);
-	printf("address of s %p\n", &s);
+	ft_printf("simple '%20p' test\n", &s);
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '%-20p' test\n", &s);
+	ft_printf("%d -- ", ++i);
+	ft_printf("simple '%-*p' test\n", 20, &s);
 
-	printf("<------------------------------------>\n");
+	printf("<------------------------------------>\n");*/
 
 /*
 	printf("%d -- ", ++j);
@@ -571,7 +619,7 @@ int main()
 	printf("simple '%u' test\n", 9);
 	printf("%d -- ", ++j);
 	printf("simple '%u' test\n", UINT_MAX);*/
-	printf("%d -- ", ++j);
+	/*printf("%d -- ", ++j);
     printf("ceci est une  phrase avec un x : %0#10x\n", 11);
 	printf("%d -- ", ++j);
 	printf("ceci est une  phrase avec un x : %#.5x\n", 11);
@@ -592,7 +640,15 @@ int main()
 	printf("%d -- ", ++j);
     printf("ceci est une  phrase avec un x : %-#10x\n", 11);
 	printf("%d -- ", ++j);
-    printf("ceci est une  phrase avec un x : %-#10x\n", INT_MIN);
-return (0);
-}
+    printf("ceci est une  phrase avec un x : %-#10x\n", INT_MIN);*/
+/*	printf("%d -- ", ++j);
+	printf("simple '%020p' test\n", &s);
+	printf("%d -- ", ++j);
+	printf("simple '%20p' test\n", &s);
+	printf("%d -- ", ++j);
+	printf("simple '%-20p' test\n", &s);
+	printf("%d -- ", ++j);
+	printf("simple '%-*p' test\n", 20, &s);
+	return (0);
+}*/
 
