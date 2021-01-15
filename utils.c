@@ -6,7 +6,7 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 15:57:10 by calle             #+#    #+#             */
-/*   Updated: 2021/01/13 15:55:05 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/14 15:48:02 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,17 @@ int		c_in_s(char c, char *s)
 		if (c == *s++)
 			return (1);
 	return (0);
+}
+
+unsigned int	ft_abs(int n)
+{
+	unsigned int nb;
+
+	if (n < 0)
+		nb = -n;
+	else
+		nb = n;
+	return (nb);
 }
 
 char	*strset(char c, unsigned int n)
