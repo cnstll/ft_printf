@@ -6,16 +6,16 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/20 15:39:27 by calle             #+#    #+#             */
-/*   Updated: 2020/11/25 10:13:50 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/14 18:00:46 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int			integer_size(int n)
+static int			integer_size(long int n)
 {
-	int				size;
-	unsigned int	nb;
+	int						size;
+	long unsigned int		nb;
 
 	size = 0;
 	if (n < 0)
@@ -35,12 +35,12 @@ static int			integer_size(int n)
 	return (size);
 }
 
-char				*ft_itoa(int n)
+char				*ft_itoa(long int n)
 {
-	int				len;
-	char			*str;
-	int				i;
-	unsigned int	nb;
+	int						len;
+	char					*str;
+	int						i;
+	long unsigned int		nb;
 
 	len = integer_size(n);
 	i = len - 1;
@@ -63,3 +63,12 @@ char				*ft_itoa(int n)
 		str[i] = (nb % 10) + 48;
 	return (str);
 }
+/*
+#include <limits.h>
+#include <stdio.h>
+int main()
+{
+	printf("%s\n", ft_itoa(INT_MIN));
+	printf("%s\n", ft_itoa(-4));
+	return (1);
+}*/

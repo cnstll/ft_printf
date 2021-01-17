@@ -49,9 +49,9 @@ void arg_display_char(t_arg *arg)
 	arg->len_arg = ft_strlen(arg->chain);
 	arg->len_prec = ft_atoi(arg->precision);
 	arg->len_width = ft_atoi(arg->width);
-	if (*(arg->precision) && arg->len_prec < arg->len_arg && arg->prec_on == 1)
+	if (*(arg->precision) && arg->len_prec < arg->len_arg && arg->prec_on == 1 && ft_strncmp(arg->chain, "(null)", 7)  != 0)
 		arg->len_arg = arg->len_prec;
-	if (arg->prec_on == 1 && arg->len_prec == 0)
+	if ((arg->prec_on == 1 && (arg->len_prec == 0 || ft_strncmp(arg->chain, "(null)", 7) == 0)) && arg->len_prec < arg->len_arg)
 	{
 		arg->chain = ft_strdup("");
 		arg->len_arg = 0;
@@ -79,7 +79,11 @@ char *convert_s(t_arg *arg, va_list ap)
 	char *pad;
 	char *tmp;
 
-	arg->chain = va_arg(ap, char *);
+	tmp = va_arg(ap, char *);
+	if (!tmp)
+		arg->chain = ft_strdup("(null)");
+	else
+		arg->chain = ft_strdup(tmp);
 	arg_display_char(arg);
 	pad = strset(' ', arg->l_pad + arg->r_pad);
 	tmp = ft_substr(arg->chain, 0, arg->len_arg);
@@ -461,8 +465,8 @@ char *convert_percent(t_arg *arg)
 {
 	char			*ret;
 
-	ret = ft_strdup("%%");
-	arg->len_printed = 2;
+	ret = ft_strdup("%");
+	arg->len_printed = 1;
 	free_all(arg);
 	return (ret);
 }
@@ -560,6 +564,8 @@ int ft_printf(const char *fmt, ...)
 	t_config *config;
 
 	ret = 0;
+	if (!*fmt)
+		return (ret);
 	if (!(config = (t_config *)malloc(sizeof(t_config))))
 		return (-1);
 	va_start(ap, fmt);
