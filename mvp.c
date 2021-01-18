@@ -49,7 +49,7 @@ void arg_display_char(t_arg *arg)
 	arg->len_arg = ft_strlen(arg->chain);
 	arg->len_prec = ft_atoi(arg->precision);
 	arg->len_width = ft_atoi(arg->width);
-	if (*(arg->precision) && arg->len_prec < arg->len_arg && arg->prec_on == 1 && ft_strncmp(arg->chain, "(null)", 7)  != 0)
+	if (*(arg->precision) && arg->len_prec < arg->len_arg && arg->prec_on == 1)
 		arg->len_arg = arg->len_prec;
 	if ((arg->prec_on == 1 && (arg->len_prec == 0 || ft_strncmp(arg->chain, "(null)", 7) == 0)) && arg->len_prec < arg->len_arg)
 	{
@@ -103,8 +103,10 @@ char *convert_c(t_arg *arg, va_list ap)
 	char *ret;
 	char *pad;
 	char *tmp;
+	char c;
 
-	arg->chain = ft_str_append(arg->chain, (char )va_arg(ap, int));
+	c = (unsigned char )va_arg(ap, unsigned int);
+	arg->chain = ft_str_append(arg->chain, c);
 	arg_display_char(arg);
 	pad = strset(' ', arg->l_pad + arg->r_pad);
 	tmp = ft_substr(arg->chain, 0, arg->len_arg);
@@ -113,6 +115,8 @@ char *convert_c(t_arg *arg, va_list ap)
 	else
 		ret = ft_strjoin(tmp, pad);
 	arg->len_printed = ft_strlen(ret);
+	if (c == '\0')
+		arg->len_printed++;
 	free(tmp);
 	free(pad);
 	free(arg->chain);
@@ -332,13 +336,8 @@ char *convert_p(t_arg *arg, va_list ap)
 	unsigned int	nb;
 
 	nb = va_arg(ap, unsigned long);
-	if (nb == 0)
-		arg->chain = ft_strdup("(nil)");
-	else
-	{
-		arg->chain = ft_itoa_base(nb, "0123456789abcdef");
-		arg->x_comp = "0x";
-	}
+	arg->chain = ft_itoa_base(nb, "0123456789abcdef");
+	arg->x_comp = "0x";
 	arg->len_xcomp = ft_strlen(arg->x_comp);
 	arg_display_p(arg);
 	handle_p_modifiers(arg);
@@ -541,6 +540,8 @@ void read_fmt(char *fmt, t_config *config, va_list ap, int *ret)
 			core_parsing(fmt, &i, arg, config);
 			print = preparing_ret(ap, arg);
 			ft_putstr_fd(print, 1);
+			if(arg->len_printed > 0 && *print == '\0')
+				ft_putchar_fd(*print, 1);
 			if(print != NULL)
 				(*ret) += arg->len_printed;
 			else
