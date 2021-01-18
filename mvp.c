@@ -44,7 +44,7 @@ void core_parsing(char *s, int *i, t_arg *arg, t_config *config)
 					arg->type = s[*i];
 }
 
-void arg_display_char(t_arg *arg)
+void arg_display_s(t_arg *arg)
 {
 	arg->len_arg = ft_strlen(arg->chain);
 	arg->len_prec = ft_atoi(arg->precision);
@@ -84,7 +84,7 @@ char *convert_s(t_arg *arg, va_list ap)
 		arg->chain = ft_strdup("(null)");
 	else
 		arg->chain = ft_strdup(tmp);
-	arg_display_char(arg);
+	arg_display_s(arg);
 	pad = strset(' ', arg->l_pad + arg->r_pad);
 	tmp = ft_substr(arg->chain, 0, arg->len_arg);
 	if (arg->r_pad == 0)
@@ -98,30 +98,61 @@ char *convert_s(t_arg *arg, va_list ap)
 	return (ret);
 }
 
-char *convert_c(t_arg *arg, va_list ap)
+void arg_display_c(t_arg *arg)
 {
-	char *ret;
-	char *pad;
-	char *tmp;
+	arg->len_arg = 1;
+	arg->len_prec = ft_atoi(arg->precision);
+	arg->len_width = ft_atoi(arg->width);
+	if (*(arg->precision) && arg->len_prec < arg->len_arg && arg->prec_on == 1)
+		arg->len_arg = arg->len_prec;
+	if (arg->prec_on == 1 && arg->len_prec == 0 && arg->len_prec < arg->len_arg)
+	{
+		arg->chain = ft_strdup("");
+		arg->len_arg = 0;
+	}
+	if (*(arg->width) && arg->len_arg < ft_abs(arg->len_width))
+	{
+		if (c_in_s('-', arg->flags) == 1)
+		{
+			arg->r_pad = ft_atoi(arg->width);
+			if (arg->r_pad > arg->len_arg)
+				arg->r_pad = arg->r_pad - arg->len_arg;
+		}
+		else
+		{
+			arg->l_pad = ft_atoi(arg->width);
+			if (arg->l_pad > arg->len_arg)
+				arg->l_pad = arg->l_pad - arg->len_arg;
+		}
+	}
+}
+
+void make_c(t_arg *arg, char c)
+{
+	int		t;
+
+	t = arg->len_arg + arg->r_pad + arg->l_pad;
+	arg->len_printed = t;
+	t = arg->l_pad;
+	while (t-- > 0)
+		ft_putchar_fd(' ', 1);
+	ft_putchar_fd(c, 1);
+	t = arg->r_pad;
+	while (t-- > 0)
+		ft_putchar_fd(' ', 1);
+}
+
+void *convert_c(t_arg *arg, va_list ap)
+{
 	char c;
 
 	c = (unsigned char )va_arg(ap, unsigned int);
 	arg->chain = ft_str_append(arg->chain, c);
-	arg_display_char(arg);
-	pad = strset(' ', arg->l_pad + arg->r_pad);
-	tmp = ft_substr(arg->chain, 0, arg->len_arg);
-	if (arg->r_pad == 0)
-		ret = ft_strjoin(pad, tmp);
-	else
-		ret = ft_strjoin(tmp, pad);
-	arg->len_printed = ft_strlen(ret);
-	if (c == '\0')
-		arg->len_printed++;
-	free(tmp);
-	free(pad);
+	arg_display_c(arg);
+	make_c(arg, c);
 	free(arg->chain);
 	free_all(arg);
-	return (ret);
+	return (NULL);
 }
 
 void handle_d_i_u_modifiers(t_arg *arg)
@@ -540,10 +571,11 @@ void read_fmt(char *fmt, t_config *config, va_list ap, int *ret)
 			core_parsing(fmt, &i, arg, config);
 			print = preparing_ret(ap, arg);
 			ft_putstr_fd(print, 1);
-			if(arg->len_printed > 0 && *print == '\0')
-				ft_putchar_fd(*print, 1);
-			if(print != NULL)
+			if(print != NULL && arg->len_printed > 0)
+			{
+				ft_putstr_fd(print, 1);
 				(*ret) += arg->len_printed;
+			}
 			else
 				(*ret) = -1;
 			free(print);

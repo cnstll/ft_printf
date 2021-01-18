@@ -18,7 +18,7 @@ SRCS = initiate_struct.c\
 		utils.c
 OBJS = $(SRCS:.c=.o)
 
-HEADERS = ft_printf.h
+HEADERS = -I ft_printf.h
 
 CC = gcc
 
