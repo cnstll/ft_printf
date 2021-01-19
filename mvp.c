@@ -105,7 +105,7 @@ void arg_display_c(t_arg *arg)
 	arg->len_width = ft_atoi(arg->width);
 	if (*(arg->precision) && arg->len_prec < arg->len_arg && arg->prec_on == 1)
 		arg->len_arg = arg->len_prec;
-	if (arg->prec_on == 1 && arg->len_prec == 0 && arg->len_prec < arg->len_arg)
+	if (*(arg->precision) && arg->prec_on == 1 && arg->len_prec == 0 && arg->len_prec < arg->len_arg)
 	{
 		arg->chain = ft_strdup("");
 		arg->len_arg = 0;
@@ -115,13 +115,13 @@ void arg_display_c(t_arg *arg)
 		if (c_in_s('-', arg->flags) == 1)
 		{
 			arg->r_pad = ft_atoi(arg->width);
-			if (arg->r_pad > arg->len_arg)
+			if (arg->r_pad >= arg->len_arg)
 				arg->r_pad = arg->r_pad - arg->len_arg;
 		}
 		else
 		{
 			arg->l_pad = ft_atoi(arg->width);
-			if (arg->l_pad > arg->len_arg)
+			if (arg->l_pad >= arg->len_arg)
 				arg->l_pad = arg->l_pad - arg->len_arg;
 		}
 	}
@@ -255,8 +255,7 @@ char *convert_d_i(t_arg *arg, va_list ap)
 	nb = 0;
 	if (n < 0)
 	{
-		nb = -(n + 1);
-		nb = nb + 1;
+		nb = -n;
 		arg->sign = -1;
 	}
 	else
@@ -344,33 +343,44 @@ char *make_p(t_arg *arg)
 	return (r);
 }
 
-void arg_display_p(t_arg *arg)
+void arg_display_p(t_arg *arg, unsigned int nb)
 {
 	arg->len_arg = ft_strlen(arg->chain);
-	if (c_in_s('-', arg->flags) == 1)
+	arg->len_width = ft_abs(ft_atoi(arg->width));
+	arg->len_prec = ft_atoi(arg->precision);
+	if (arg->prec_on == 1 && arg->len_prec == 0 && nb == 0)
 	{
-		arg->r_pad = ft_atoi(arg->width);
-		if (arg->r_pad > arg->len_arg)
-			arg->r_pad = arg->r_pad - arg->len_arg;
+		free(arg->chain);
+		arg->chain = ft_strdup("");
+		arg->len_arg = 0;
 	}
-	else
+	if (*(arg->width) && arg->len_arg < ft_abs(arg->len_width))
 	{
-		arg->l_pad = ft_atoi(arg->width);
-		if (arg->l_pad > arg->len_arg)
-			arg->l_pad = arg->l_pad - arg->len_arg;
+		if (c_in_s('-', arg->flags) == 1)
+		{
+			arg->r_pad = ft_atoi(arg->width);
+			if (arg->r_pad > arg->len_arg)
+				arg->r_pad = arg->r_pad - arg->len_arg;
+		}
+		else
+		{
+			arg->l_pad = ft_atoi(arg->width);
+			if (arg->l_pad > arg->len_arg)
+				arg->l_pad = arg->l_pad - arg->len_arg;
+		}
 	}
 }
 
 char *convert_p(t_arg *arg, va_list ap)
 {
 	char			*ret;
-	unsigned int	nb;
+	uintptr_t		nb;
 
-	nb = va_arg(ap, unsigned long);
+	nb = (uintptr_t)va_arg(ap, void *);
 	arg->chain = ft_itoa_base(nb, "0123456789abcdef");
 	arg->x_comp = "0x";
 	arg->len_xcomp = ft_strlen(arg->x_comp);
-	arg_display_p(arg);
+	arg_display_p(arg, nb);
 	handle_p_modifiers(arg);
 	ret = make_p(arg);
 	free(arg->chain);
@@ -495,8 +505,11 @@ char *convert_percent(t_arg *arg)
 {
 	char			*ret;
 
-	ret = ft_strdup("%");
-	arg->len_printed = 1;
+	arg->chain = ft_strdup("%");
+	arg_display_nb(arg);
+	handle_d_i_u_modifiers(arg);
+	ret = make_d_i_u(arg);
+	free(arg->chain);
 	free_all(arg);
 	return (ret);
 }
@@ -570,8 +583,7 @@ void read_fmt(char *fmt, t_config *config, va_list ap, int *ret)
 			initiate_arg(arg);
 			core_parsing(fmt, &i, arg, config);
 			print = preparing_ret(ap, arg);
-			ft_putstr_fd(print, 1);
-			if(print != NULL && arg->len_printed > 0)
+			if(print != NULL || arg->len_printed > 0)
 			{
 				ft_putstr_fd(print, 1);
 				(*ret) += arg->len_printed;

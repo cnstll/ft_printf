@@ -52,11 +52,11 @@ char	*ft_strrev(char *s)
 	return (s);
 }
 
-char	*ft_itoa_base(long unsigned int nbr, char *base)
+char	*ft_itoa_base(long long unsigned int nbr, char *base)
 {
-	int					bse;
-	char				*ret;
-	long unsigned int	t_nbr;
+	int						bse;
+	char					*ret;
+	long long unsigned int	t_nbr;
 
 	bse = ft_base_valid(base);
 	ret = "";

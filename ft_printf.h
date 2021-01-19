@@ -16,7 +16,7 @@
 # include <stdarg.h>
 # include <stdlib.h>
 # include <limits.h>
-# include "../libft/libft.h"
+# include "libft/libft.h"
 typedef struct	s_arg
 {
 	char			*flags; //"-+0 #"
@@ -50,6 +50,6 @@ void			initiate_config(t_config *config);
 char			*ft_str_append(char *s, char c);
 int				c_in_s(char c, char *s);
 char			*strset(char c, unsigned int n);
-char			*ft_itoa_base(long unsigned int nbr, char *base);
+char			*ft_itoa_base(long long unsigned int nbr, char *base);
 unsigned int	ft_abs(int n);
 #endif
