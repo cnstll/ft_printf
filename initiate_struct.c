@@ -18,19 +18,19 @@ void initiate_arg(t_arg *arg)
 	arg->type = 0;
 	arg->width = "";
 	arg->prec_on = 0;
-	arg->precision = "";
-	arg->l_pad = 0;
+	arg->prec = "";
+	arg->lf_pad = 0;
 	arg->r_pad = 0;
-	arg->len_prec = 0;
-	arg->len_width = 0;
-	arg->len_arg = 0;
+	arg->l_prec = 0;
+	arg->l_width = 0;
+	arg->l_arg = 0;
 	arg->chain = "";
 	arg->sign = 0;
 	arg->nb_zeros = 0;
-	arg->x_comp = "";
+	arg->p_x_pref = "";
 	arg->x_init = 0;
-	arg->len_xcomp = 0;
-	arg->len_printed = 0;
+	arg->ln_p_x_pref = 0;
+	arg->l_printed = 0;
 }
 
 void initiate_config(t_config *config)

@@ -19,23 +19,23 @@
 # include "libft/libft.h"
 typedef struct	s_arg
 {
-	char			*flags; //"-+0 #"
-	char			type; //"cspdiuxX%"
-	char			*width; //number or *
+	char			*flags;
+	char			type;
+	char			*width;
 	int				prec_on;
-	char			*precision; //number or *
-	unsigned int	l_pad;
+	char			*prec;
+	unsigned int	lf_pad;
 	unsigned int	r_pad;
-	unsigned int	len_prec;
-	unsigned int	len_width;
-	unsigned int	len_arg;
+	unsigned int	l_prec;
+	unsigned int	l_width;
+	unsigned int	l_arg;
 	char			*chain;
 	int				sign;
 	int			    nb_zeros;
-	char			*x_comp;
+	char			*p_x_pref;
 	unsigned int	x_init;
-	int				len_xcomp;
-	int				len_printed;
+	int				ln_p_x_pref;
+	int				l_printed;
 }				t_arg;
 
 typedef struct	s_config
