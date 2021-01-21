@@ -6,7 +6,7 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/20 19:38:32 by calle             #+#    #+#             */
-/*   Updated: 2021/01/21 17:03:28 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/21 18:38:42 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ static void	handle_x_modifiers(t_arg *arg)
 	{
 		if (!*(arg->prec) || !arg->prec_on)
 			arg->nb_zeros = arg->nb_zeros - 2;
+		if (arg->nb_zeros < 0)
+			arg->nb_zeros = 0;
 		modify_padding_x_p(arg);
 		arg->ln_p_x_pref = 2;
 		if (arg->type == 'x')
