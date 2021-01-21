@@ -6,12 +6,12 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/20 19:47:19 by calle             #+#    #+#             */
-/*   Updated: 2021/01/21 17:55:42 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/21 19:37:19 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_printf.h"
-
+#include <stdio.h>
 static void handle_d_i_u_modifiers(t_arg *arg)
 {
 	if (!*(arg->prec) && arg->prec_on == 0 && ft_atoi(arg->chain) != 0)
@@ -21,18 +21,13 @@ static void handle_d_i_u_modifiers(t_arg *arg)
 			arg->nb_zeros = arg->lf_pad;
 			arg->lf_pad = 0;
 		}
-
+	}
 		if (c_in_s('+', arg->flags) == 0 && c_in_s(' ', arg->flags) == 1)
 		{
-			if (arg->nb_zeros > 0)
-				arg->nb_zeros = arg->nb_zeros - 1;
 			arg->lf_pad = arg->lf_pad + 1 - ft_abs(arg->sign);
 			if (arg->r_pad > 0)
 				arg->r_pad = arg->r_pad - 1 + ft_abs(arg->sign);
-			else
-				arg->r_pad = ft_abs(arg->sign);
 		}
-	}
 }
 
 static void arg_display_nb(t_arg *arg)
