@@ -6,7 +6,7 @@
 #    By: calle <calle@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/19 10:07:58 by calle             #+#    #+#              #
-#    Updated: 2020/12/07 14:24:05 by calle            ###   ########.fr        #
+#    Updated: 2021/01/21 11:54:35 by calle            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -75,7 +75,7 @@ $(NAME) : $(OBJS)
 	ar rcs $(NAME) $(OBJS) $(HEADERS)
 
 .c.o:
-	$(CC) -c $(CFLAGS) $^
+	@$(CC) -c $(CFLAGS) $^
 
 bonus: $(BONUSOBJS) $(OBJS)
 	ar rcs $(NAME) $(OBJS) $(BONUSOBJS) $(HEADERS)

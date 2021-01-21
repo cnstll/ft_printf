@@ -6,11 +6,11 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 15:57:10 by calle             #+#    #+#             */
-/*   Updated: 2021/01/14 15:48:02 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/21 11:34:56 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "../includes/ft_printf.h"
 
 int		c_in_s(char c, char *s)
 {
