@@ -6,7 +6,7 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/20 19:34:12 by calle             #+#    #+#             */
-/*   Updated: 2021/01/21 11:38:46 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/21 17:02:39 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,10 @@ static void check_prec(va_list ap, t_arg *arg)
 		{
 			n = 0;
 			arg->prec_on = 0;
+			tmp = ft_strdup("");
 		}
-		tmp = ft_itoa(n);
+		else
+			tmp = ft_itoa(n);
 		arg->prec = ft_strdup(tmp);
 		free(tmp);
 	}

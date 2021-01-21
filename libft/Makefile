@@ -6,7 +6,7 @@
 #    By: calle <calle@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/19 10:07:58 by calle             #+#    #+#              #
-#    Updated: 2021/01/21 11:54:35 by calle            ###   ########.fr        #
+#    Updated: 2021/01/21 14:32:34 by calle            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,7 +63,7 @@ HEADERS = libft.h
 
 CPLHEADERS = libft.h.gch
 
-CC = clang-9
+CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror
 

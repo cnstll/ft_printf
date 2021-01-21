@@ -6,15 +6,15 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/20 19:38:32 by calle             #+#    #+#             */
-/*   Updated: 2021/01/21 11:34:04 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/21 17:03:28 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_printf.h"
 
-static void handle_x_modifiers(t_arg *arg)
+static void	handle_x_modifiers(t_arg *arg)
 {
-	if (!(*arg->prec) || arg->prec_on == 0)
+	if (!(*arg->prec) && arg->prec_on == 0)
 	{
 		if (c_in_s('-', arg->flags) == 0 && c_in_s('0', arg->flags) == 1)
 		{
@@ -22,9 +22,9 @@ static void handle_x_modifiers(t_arg *arg)
 			arg->lf_pad = 0;
 		}
 	}
-	if (c_in_s('#', arg->flags) == 1)
+	if (arg->x_init != 0 && c_in_s('#', arg->flags) == 1)
 	{
-		if (!*(arg->prec))
+		if (!*(arg->prec) || !arg->prec_on)
 			arg->nb_zeros = arg->nb_zeros - 2;
 		modify_padding_x_p(arg);
 		arg->ln_p_x_pref = 2;
@@ -32,10 +32,10 @@ static void handle_x_modifiers(t_arg *arg)
 			arg->p_x_pref = "0x";
 		else
 			arg->p_x_pref = "0X";
-		}
+	}
 }
 
-static void arg_display_x(t_arg *arg)
+static void	arg_display_x(t_arg *arg)
 {
 	set_len_parameter(arg);
 	if (*(arg->prec) && arg->l_prec > arg->l_arg)
@@ -51,14 +51,15 @@ static void arg_display_x(t_arg *arg)
 		generate_lf_r_padding(arg);
 }
 
-static char *make_x(t_arg *arg)
+static char	*make_x(t_arg *arg)
 {
 	char	*r;
 	int		i;
 	int		t;
 	int		j;
 
-	t = arg->l_arg + arg->r_pad + arg->lf_pad + arg->nb_zeros + arg->ln_p_x_pref;
+	t = arg->l_arg + arg->r_pad + arg->lf_pad
+					+ arg->nb_zeros + arg->ln_p_x_pref;
 	arg->l_printed = t;
 	i = 0;
 	j = 0;
@@ -79,7 +80,7 @@ static char *make_x(t_arg *arg)
 	return (r);
 }
 
-char *convert_x(t_arg *arg, va_list ap)
+char		*convert_x(t_arg *arg, va_list ap)
 {
 	char			*ret;
 	unsigned int	nb;
@@ -97,4 +98,3 @@ char *convert_x(t_arg *arg, va_list ap)
 	free_param(arg);
 	return (ret);
 }
-
