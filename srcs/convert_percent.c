@@ -6,7 +6,7 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 11:36:47 by calle             #+#    #+#             */
-/*   Updated: 2021/01/23 20:03:28 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/23 20:20:25 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,17 @@
 
 static void handle_percent_modifiers(t_arg *arg)
 {
-	if (!*(arg->prec) && arg->prec_on == 0)
-	{
 		if (c_in_s('-', arg->flags) == 0 && c_in_s('0', arg->flags) == 1)
 		{
 			arg->nb_zeros = arg->lf_pad;
 			arg->lf_pad = 0;
 		}
-	}
 }
 
 static void arg_display_percent(t_arg *arg)
 {
 	set_len_parameter(arg);
-	if (*arg->prec && arg->l_prec > arg->l_arg && c_in_s(arg->flag, '-') == 0)
-		arg->nb_zeros = arg->l_prec - arg->l_arg;
-	if (*(arg->width) && arg->l_arg + arg->nb_zeros < ft_abs(arg->l_width))
+	if (*(arg->width) && arg->l_arg < ft_abs(arg->l_width))
 		generate_lf_r_padding(arg);
 }
 
