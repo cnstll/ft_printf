@@ -6,7 +6,7 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 11:36:47 by calle             #+#    #+#             */
-/*   Updated: 2021/01/23 19:54:33 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/23 20:03:28 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,30 +22,13 @@ static void handle_percent_modifiers(t_arg *arg)
 			arg->lf_pad = 0;
 		}
 	}
-	if ((c_in_s('+', arg->flags) == 0 && c_in_s(' ', arg->flags) == 1 && arg->sign > -1))
-	{
-		if (arg->lf_pad == 0)
-			arg->lf_pad = arg->lf_pad + 1;
-		if (arg->r_pad > 0)
-			arg->r_pad = arg->r_pad - 1;
-		if (arg->nb_zeros > 0 && arg->prec_on == 0)
-			arg->nb_zeros -= 1;
-	}
 }
 
 static void arg_display_percent(t_arg *arg)
 {
 	set_len_parameter(arg);
-	if (*(arg->prec) && arg->l_prec > arg->l_arg)
+	if (*arg->prec && arg->l_prec > arg->l_arg && c_in_s(arg->flag, '-') == 0)
 		arg->nb_zeros = arg->l_prec - arg->l_arg;
-	if (arg->prec_on == 1 && arg->l_prec == 0 && ft_atoi(arg->chain) == 0)
-	{
-		free(arg->chain);
-		arg->chain = ft_strdup("");
-		arg->l_arg = 0;
-	}
-	if (arg->l_prec == 1)
-		arg->l_prec = 0;
 	if (*(arg->width) && arg->l_arg + arg->nb_zeros < ft_abs(arg->l_width))
 		generate_lf_r_padding(arg);
 }
