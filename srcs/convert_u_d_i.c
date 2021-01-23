@@ -6,7 +6,7 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/20 19:47:19 by calle             #+#    #+#             */
-/*   Updated: 2021/01/22 11:35:18 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/22 12:34:24 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,18 @@ static void handle_d_i_u_modifiers(t_arg *arg)
 			arg->lf_pad = 0;
 		}
 	}
-	if (!*(arg->width))
+	printf("arg->width = %s -- arg->l_width = %u\n", arg->width, arg->l_width);
+	if (!*(arg->width) || arg->width_on == 0 ||
+		(c_in_s('-', arg->flags) == 1 && ft_atoi(arg->chain) == 0))
 	{
+		printf("Enter if\n");
 		if (c_in_s('+', arg->flags) == 0 && c_in_s(' ', arg->flags) == 1)
 		{
 			arg->lf_pad = arg->lf_pad + 1 - ft_abs(arg->sign);
 			if (arg->r_pad > 0)
 				arg->r_pad = arg->r_pad - 1 + ft_abs(arg->sign);
+			if (arg->width_on && ft_atoi(arg->chain) == 0)
+				arg->lf_pad += 1;
 		}
 	}
 }
@@ -40,6 +45,7 @@ static void arg_display_nb(t_arg *arg)
 		arg->nb_zeros = arg->l_prec - arg->l_arg;
 	if (arg->prec_on == 1 && arg->l_prec == 0 && ft_atoi(arg->chain) == 0)
 	{
+		printf("Enter if\n");
 		free(arg->chain);
 		arg->chain = ft_strdup("");
 		arg->l_arg = 0;

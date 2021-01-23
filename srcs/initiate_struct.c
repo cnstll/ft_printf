@@ -6,7 +6,7 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 16:39:12 by calle             #+#    #+#             */
-/*   Updated: 2021/01/21 11:30:17 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/22 12:24:13 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void initiate_arg(t_arg *arg)
 	arg->type = 0;
 	arg->width = "";
 	arg->prec_on = 0;
+	arg->width_on = 1;
 	arg->prec = "";
 	arg->lf_pad = 0;
 	arg->r_pad = 0;

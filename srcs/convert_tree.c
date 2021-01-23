@@ -6,7 +6,7 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/20 19:34:12 by calle             #+#    #+#             */
-/*   Updated: 2021/01/21 17:02:39 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/22 12:21:13 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ static void check_width(va_list ap, t_arg *arg)
 	{
 		free(arg->width);
 		n = va_arg(ap, int);
+		if (n == 0)
+			arg->width_on = 0;
 		if (n < 0 && c_in_s('-', arg->flags) == 0)
 			arg->flags = ft_str_append(arg->flags, '-');
 		tmp = ft_itoa(ft_abs(n));
