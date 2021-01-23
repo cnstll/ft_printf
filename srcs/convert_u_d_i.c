@@ -6,7 +6,7 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/20 19:47:19 by calle             #+#    #+#             */
-/*   Updated: 2021/01/23 17:49:49 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/23 19:19:46 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void handle_d_i_u_modifiers(t_arg *arg)
 		arg->lf_pad = arg->lf_pad + 1;
 		if (arg->r_pad > 0)
 			arg->r_pad = arg->r_pad - 1;
-		if (arg->nb_zeros > 0)
+		if (arg->nb_zeros > 0 && arg->prec_on == 0)
 			arg->nb_zeros -= 1;
 	}
 }
