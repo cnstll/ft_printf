@@ -6,12 +6,12 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/20 19:47:19 by calle             #+#    #+#             */
-/*   Updated: 2021/01/23 19:46:56 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/23 19:53:36 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_printf.h"
-#include <stdio.h>
+
 static void handle_d_i_u_modifiers(t_arg *arg)
 {
 	if (!*(arg->prec) && arg->prec_on == 0)

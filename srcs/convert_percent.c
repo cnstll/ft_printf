@@ -6,7 +6,7 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 11:36:47 by calle             #+#    #+#             */
-/*   Updated: 2021/01/21 12:06:45 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/23 19:54:33 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,22 @@
 
 static void handle_percent_modifiers(t_arg *arg)
 {
-	if (!*(arg->prec) || arg->prec_on == 0)
+	if (!*(arg->prec) && arg->prec_on == 0)
 	{
 		if (c_in_s('-', arg->flags) == 0 && c_in_s('0', arg->flags) == 1)
 		{
 			arg->nb_zeros = arg->lf_pad;
 			arg->lf_pad = 0;
 		}
-		if (c_in_s('+', arg->flags) == 0 && c_in_s(' ', arg->flags) == 1)
-		{
-			if (arg->nb_zeros > 0)
-				arg->nb_zeros = arg->nb_zeros - 1;
-			arg->lf_pad = arg->lf_pad + 1 - ft_abs(arg->sign);
-			if (arg->r_pad > 0)
-				arg->r_pad = arg->r_pad - 1 + ft_abs(arg->sign);
-			else
-				arg->r_pad = ft_abs(arg->sign);
-		}
+	}
+	if ((c_in_s('+', arg->flags) == 0 && c_in_s(' ', arg->flags) == 1 && arg->sign > -1))
+	{
+		if (arg->lf_pad == 0)
+			arg->lf_pad = arg->lf_pad + 1;
+		if (arg->r_pad > 0)
+			arg->r_pad = arg->r_pad - 1;
+		if (arg->nb_zeros > 0 && arg->prec_on == 0)
+			arg->nb_zeros -= 1;
 	}
 }
 
@@ -58,7 +57,7 @@ static char *make_percent(t_arg *arg)
 	int		t;
 	int		j;
 
-	t = arg->l_arg + arg->r_pad + arg->lf_pad + arg->nb_zeros + ft_abs(arg->sign);
+	t = arg->l_arg + arg->r_pad + arg->lf_pad + arg->nb_zeros;
 	arg->l_printed = t;
 	i = 0;
 	j = 0;
@@ -66,10 +65,6 @@ static char *make_percent(t_arg *arg)
 		return (NULL);
 	while (arg->lf_pad-- > 0)
 		r[i++] = ' ';
-	if (arg->sign == -1)
-		r[i++] = '-';
-	if (arg->sign == 1)
-		r[i++] = '+';
 	while (arg->nb_zeros-- > 0)
 		r[i++] = '0';
 	while (arg->l_arg-- > 0)
@@ -79,7 +74,6 @@ static char *make_percent(t_arg *arg)
 	r[i] = '\0';
 	return (r);
 }
-
 
 char *convert_percent(t_arg *arg)
 {
