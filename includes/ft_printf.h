@@ -6,7 +6,7 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 15:50:08 by calle             #+#    #+#             */
-/*   Updated: 2021/01/21 11:38:13 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/22 12:19:01 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef struct	s_arg
 	char			type;
 	char			*width;
 	int				prec_on;
+	int				width_on;
 	char			*prec;
 	unsigned int	lf_pad;
 	unsigned int	r_pad;
