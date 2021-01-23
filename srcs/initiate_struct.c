@@ -6,13 +6,13 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 16:39:12 by calle             #+#    #+#             */
-/*   Updated: 2021/01/22 12:24:13 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/23 21:11:29 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_printf.h"
 
-void initiate_arg(t_arg *arg)
+void	initiate_arg(t_arg *arg)
 {
 	arg->flags = "";
 	arg->type = 0;
@@ -34,9 +34,8 @@ void initiate_arg(t_arg *arg)
 	arg->l_printed = 0;
 }
 
-void initiate_config(t_config *config)
+void	initiate_config(t_config *config)
 {
 	config->types = "cspdiuxX%";
 	config->flags = "-+0 #";
 }
-

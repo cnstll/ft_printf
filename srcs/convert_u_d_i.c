@@ -6,13 +6,13 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/20 19:47:19 by calle             #+#    #+#             */
-/*   Updated: 2021/01/23 19:53:36 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/23 21:05:13 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_printf.h"
 
-static void handle_d_i_u_modifiers(t_arg *arg)
+static void	handle_d_i_u_modifiers(t_arg *arg)
 {
 	if (!*(arg->prec) && arg->prec_on == 0)
 	{
@@ -22,7 +22,8 @@ static void handle_d_i_u_modifiers(t_arg *arg)
 			arg->lf_pad = 0;
 		}
 	}
-	if ((c_in_s('+', arg->flags) == 0 && c_in_s(' ', arg->flags) == 1 && arg->sign > -1))
+	if ((c_in_s('+', arg->flags) == 0 && c_in_s(' ', arg->flags) == 1
+										&& arg->sign > -1))
 	{
 		if (arg->lf_pad == 0)
 			arg->lf_pad = arg->lf_pad + 1;
@@ -33,7 +34,7 @@ static void handle_d_i_u_modifiers(t_arg *arg)
 	}
 }
 
-static void arg_display_nb(t_arg *arg)
+static void	arg_display_nb(t_arg *arg)
 {
 	set_len_parameter(arg);
 	if (*(arg->prec) && arg->l_prec > arg->l_arg)
@@ -50,18 +51,17 @@ static void arg_display_nb(t_arg *arg)
 		generate_lf_r_padding(arg);
 }
 
-static char *make_d_i_u(t_arg *arg)
+static char	*make_d_i_u(t_arg *arg)
 {
 	char	*r;
 	int		i;
-	int		t;
 	int		j;
 
-	t = arg->l_arg + arg->r_pad + arg->lf_pad + arg->nb_zeros + ft_abs(arg->sign);
-	arg->l_printed = t;
+	arg->l_printed = arg->l_arg + arg->r_pad + arg->lf_pad + arg->nb_zeros
+														+ ft_abs(arg->sign);
 	i = 0;
 	j = 0;
-	if (!(r = (char *)malloc(sizeof(char) * (t + 1))))
+	if (!(r = (char *)malloc(sizeof(char) * (arg->l_printed + 1))))
 		return (NULL);
 	while (arg->lf_pad-- > 0)
 		r[i++] = ' ';
@@ -79,7 +79,7 @@ static char *make_d_i_u(t_arg *arg)
 	return (r);
 }
 
-char *convert_d_i(t_arg *arg, va_list ap)
+char		*convert_d_i(t_arg *arg, va_list ap)
 {
 	char			*ret;
 	unsigned int	nb;
@@ -105,7 +105,7 @@ char *convert_d_i(t_arg *arg, va_list ap)
 	return (ret);
 }
 
-char *convert_u(t_arg *arg, va_list ap)
+char		*convert_u(t_arg *arg, va_list ap)
 {
 	char			*ret;
 	unsigned int	nb;

@@ -6,15 +6,15 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 15:57:10 by calle             #+#    #+#             */
-/*   Updated: 2021/01/21 11:34:56 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/23 21:13:33 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_printf.h"
 
-int		c_in_s(char c, char *s)
+int				c_in_s(char c, char *s)
 {
-	while(*s)
+	while (*s)
 		if (c == *s++)
 			return (1);
 	return (0);
@@ -31,7 +31,7 @@ unsigned int	ft_abs(int n)
 	return (nb);
 }
 
-char	*strset(char c, unsigned int n)
+char			*strset(char c, unsigned int n)
 {
 	unsigned int	i;
 	char			*s;
@@ -45,7 +45,7 @@ char	*strset(char c, unsigned int n)
 	return (s);
 }
 
-char	*ft_str_append(char *s, char c)
+char			*ft_str_append(char *s, char c)
 {
 	unsigned int	len;
 	char			*r;

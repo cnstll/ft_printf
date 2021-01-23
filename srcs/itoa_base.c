@@ -6,7 +6,7 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/11 17:40:17 by calle             #+#    #+#             */
-/*   Updated: 2021/01/21 11:36:00 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/23 21:11:50 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,4 +72,3 @@ char	*ft_itoa_base(long long unsigned int nbr, char *base)
 		ret = ft_str_append(ret, '0');
 	return (ft_strrev(ret));
 }
-

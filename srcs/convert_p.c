@@ -6,13 +6,13 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/20 19:40:22 by calle             #+#    #+#             */
-/*   Updated: 2021/01/21 11:35:11 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/23 20:59:28 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_printf.h"
 
-static void handle_p_modifiers(t_arg *arg)
+static void	handle_p_modifiers(t_arg *arg)
 {
 	if (c_in_s('-', arg->flags) == 0 && c_in_s('0', arg->flags) == 1)
 	{
@@ -23,14 +23,15 @@ static void handle_p_modifiers(t_arg *arg)
 		modify_padding_x_p(arg);
 }
 
-static char *make_p(t_arg *arg)
+static char	*make_p(t_arg *arg)
 {
 	char	*r;
 	int		i;
 	int		t;
 	int		j;
 
-	t = arg->l_arg + arg->r_pad + arg->lf_pad + arg->nb_zeros + arg->ln_p_x_pref;
+	t = arg->l_arg + arg->r_pad + arg->lf_pad + arg->nb_zeros +
+												arg->ln_p_x_pref;
 	arg->l_printed = t;
 	i = 0;
 	j = 0;
@@ -42,7 +43,7 @@ static char *make_p(t_arg *arg)
 		r[i++] = (arg->p_x_pref)[j++];
 	while (arg->nb_zeros-- > 0)
 		r[i++] = '0';
-	j =  0;
+	j = 0;
 	while (arg->l_arg-- > 0)
 		r[i++] = (arg->chain)[j++];
 	while (arg->r_pad-- > 0)
@@ -51,7 +52,7 @@ static char *make_p(t_arg *arg)
 	return (r);
 }
 
-static void arg_display_p(t_arg *arg, unsigned int nb)
+static void	arg_display_p(t_arg *arg, unsigned int nb)
 {
 	set_len_parameter(arg);
 	if (*(arg->prec) && arg->l_prec > arg->l_arg)
@@ -66,7 +67,7 @@ static void arg_display_p(t_arg *arg, unsigned int nb)
 		generate_lf_r_padding(arg);
 }
 
-char *convert_p(t_arg *arg, va_list ap)
+char		*convert_p(t_arg *arg, va_list ap)
 {
 	char			*ret;
 	uintptr_t		nb;
@@ -82,4 +83,3 @@ char *convert_p(t_arg *arg, va_list ap)
 	free_param(arg);
 	return (ret);
 }
-

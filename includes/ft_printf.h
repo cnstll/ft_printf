@@ -6,12 +6,12 @@
 /*   By: calle <calle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/16 15:50:08 by calle             #+#    #+#             */
-/*   Updated: 2021/01/22 12:19:01 by calle            ###   ########.fr       */
+/*   Updated: 2021/01/23 21:18:33 by calle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_PRINTF_H
-#define FT_PRINTF_H
+# define FT_PRINTF_H
 
 # include <stdarg.h>
 # include <stdlib.h>
@@ -34,7 +34,7 @@ typedef struct	s_arg
 	unsigned int	l_arg;
 	char			*chain;
 	int				sign;
-	int			    nb_zeros;
+	int				nb_zeros;
 	char			*p_x_pref;
 	unsigned int	x_init;
 	int				ln_p_x_pref;
@@ -47,7 +47,7 @@ typedef struct	s_config
 	char *flags;
 }				t_config;
 
-int				ft_printf(const char *fmt,...);
+int				ft_printf(const char *fmt, ...);
 void			initiate_arg(t_arg *arg);
 void			initiate_config(t_config *config);
 char			*ft_str_append(char *s, char c);
@@ -63,7 +63,6 @@ char			*convert_d_i(t_arg *arg, va_list ap);
 char			*convert_x(t_arg *arg, va_list ap);
 char			*convert_p(t_arg *arg, va_list ap);
 char			*convert_percent(t_arg *arg);
-void			parse_precision(char *s, int *i, t_arg *arg);
 void			core_parsing(char *s, int *i, t_arg *arg, t_config *config);
 void			modify_padding_x_p(t_arg *arg);
 void			generate_lf_r_padding(t_arg *arg);
